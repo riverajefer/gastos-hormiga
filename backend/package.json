@@ -3,14 +3,19 @@
   "version": "1.0.0",
   "description": "Backend API for Gastos Hormiga expense tracker",
   "main": "dist/app.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "dev": "tsx watch src/app.ts",
-    "build": "tsc",
+    "build": "tsc && npm run db:generate",
     "start": "node dist/app.js",
     "db:generate": "prisma generate --schema=src/prisma/schema.prisma",
     "db:push": "prisma db push --schema=src/prisma/schema.prisma",
+    "db:migrate": "prisma migrate deploy --schema=src/prisma/schema.prisma",
     "db:seed": "tsx src/seed.ts",
-    "db:studio": "prisma studio --schema=src/prisma/schema.prisma"
+    "db:studio": "prisma studio --schema=src/prisma/schema.prisma",
+    "postinstall": "prisma generate --schema=src/prisma/schema.prisma"
   },
   "dependencies": {
     "@prisma/client": "^5.10.0",

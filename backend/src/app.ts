@@ -6,9 +6,26 @@ import { errorHandler, notFoundHandler } from './middleware/error-handler.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
-app.use(cors());
+// CORS configuration
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? allowedOrigins 
+    : true,
+  credentials: true,
+}));
+
 app.use(express.json());
+
+// Health check endpoint (important for Render)
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
 
 // API Routes
 app.use('/api', routes);
@@ -19,8 +36,8 @@ app.use(errorHandler);
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🐜 Gastos Hormiga API running on http://localhost:${PORT}`);
-  console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
+  console.log(`🐜 Gastos Hormiga API running on port ${PORT}`);
+  console.log(`📊 Health check: /health`);
 });
 
 export default app;
