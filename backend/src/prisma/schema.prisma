@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  concept     String
+  amount      Int      // Stored in cents to avoid floating point issues
+  category    String   @default("otros")
+  date        DateTime // Date of the expense (can be different from createdAt)
+  isRecurring Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date])
+  @@index([category])
+  @@index([concept])
+}
+
+model QuickExpense {
+  id         String   @id @default(cuid())
+  concept    String
+  amount     Int      // Stored in cents
+  category   String   @default("otros")
+  order      Int      @default(0)
+  usageCount Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([order])
+}
+
+model MonthlyBudget {
+  id    String @id @default(cuid())
+  month Int    // 1-12
+  year  Int
+  limit Int?   // Budget limit in cents
+
+  @@unique([month, year])
+}
+
+model UserSettings {
+  id              String  @id @default("default")
+  reminderEnabled Boolean @default(false)
+  reminderTime    String? @default("21:00")
+  darkMode        Boolean @default(true)
+  currency        String  @default("COP")
+}
