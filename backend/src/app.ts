@@ -11,7 +11,7 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   process.env.FRONTEND_URL,
-].filter(Boolean);
+].filter((origin): origin is string => Boolean(origin));
 
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
