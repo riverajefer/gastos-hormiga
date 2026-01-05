@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 3001;
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
+  'https://gastos-hormiga-7g5jx835t-jeffs-projects-2e8483b3.vercel.app',
   process.env.FRONTEND_URL,
 ].filter((origin): origin is string => Boolean(origin));
 
