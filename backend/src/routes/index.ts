@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import * as expenseController from '../controllers/expense.controller.js';
 import * as quickExpenseController from '../controllers/quick-expense.controller.js';
 import * as statsController from '../controllers/stats.controller.js';
@@ -8,7 +8,7 @@ import { getAllCategories } from '../services/category-inference.service.js';
 const router = Router();
 
 // Health check
-router.get('/health', (req, res) => {
+router.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
@@ -46,7 +46,7 @@ router.get('/settings', settingsController.getSettings);
 router.put('/settings', settingsController.updateSettings);
 
 // Categories
-router.get('/categories', (req, res) => {
+router.get('/categories', (req: Request, res: Response) => {
   res.json(getAllCategories());
 });
 
