@@ -11,6 +11,8 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   'https://gastos-hormiga-7g5jx835t-jeffs-projects-2e8483b3.vercel.app',
+  'https://gastos-hormiga-eta.vercel.app/',
+  process.env.BACKEND_URL,
   process.env.FRONTEND_URL,
 ].filter((origin): origin is string => Boolean(origin));
 
