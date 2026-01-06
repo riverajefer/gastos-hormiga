@@ -5,6 +5,34 @@
       <stop offset="100%" style="stop-color:#0d0d14"/>
     </linearGradient>
   </defs>
-  <rect width="192" height="192" rx="40" fill="url(#bg)"/>
-  <text x="96" y="125" font-size="90" text-anchor="middle">🐜</text>
+  <!-- Background -->
+  <rect width="192" height="192" rx="38" fill="url(#bg)"/>
+
+  <!-- Ant Body - Stylized -->
+  <g fill="#00d9c0">
+    <!-- Head -->
+    <ellipse cx="96" cy="60" rx="21" ry="19"/>
+    <!-- Thorax -->
+    <ellipse cx="96" cy="96" rx="17" ry="15"/>
+    <!-- Abdomen -->
+    <ellipse cx="96" cy="139" rx="24" ry="26"/>
+
+    <!-- Antennae -->
+    <path d="M82 45 Q75 30 68 22" stroke="#00d9c0" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M110 45 Q117 30 124 22" stroke="#00d9c0" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+    <!-- Legs - Left -->
+    <path d="M81 90 Q64 83 49 75" stroke="#00d9c0" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M81 97 Q60 97 41 97" stroke="#00d9c0" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M81 105 Q64 112 49 120" stroke="#00d9c0" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+    <!-- Legs - Right -->
+    <path d="M111 90 Q128 83 143 75" stroke="#00d9c0" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M111 97 Q132 97 151 97" stroke="#00d9c0" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M111 105 Q128 112 143 120" stroke="#00d9c0" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Eyes -->
+  <circle cx="88" cy="56" r="5" fill="#1a1a2e"/>
+  <circle cx="104" cy="56" r="5" fill="#1a1a2e"/>
 </svg>
