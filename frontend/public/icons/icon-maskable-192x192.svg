@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#0d0d14"/>
+    </linearGradient>
+  </defs>
+  <!-- Background - full square for maskable -->
+  <rect width="192" height="192" fill="url(#bg)"/>
+
+  <!-- Ant Body - Centered in safe zone (80% = 154px, offset 19px) -->
+  <g fill="#00d9c0" transform="translate(19, 19) scale(0.8)">
+    <!-- Head -->
+    <ellipse cx="96" cy="60" rx="21" ry="19"/>
+    <!-- Thorax -->
+    <ellipse cx="96" cy="96" rx="17" ry="15"/>
+    <!-- Abdomen -->
+    <ellipse cx="96" cy="139" rx="24" ry="26"/>
+
+    <!-- Antennae -->
+    <path d="M82 45 Q75 30 68 22" stroke="#00d9c0" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M110 45 Q117 30 124 22" stroke="#00d9c0" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+    <!-- Legs - Left -->
+    <path d="M81 90 Q64 83 52 77" stroke="#00d9c0" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M81 97 Q62 97 46 97" stroke="#00d9c0" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M81 105 Q64 112 52 118" stroke="#00d9c0" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+    <!-- Legs - Right -->
+    <path d="M111 90 Q128 83 140 77" stroke="#00d9c0" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M111 97 Q130 97 146 97" stroke="#00d9c0" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M111 105 Q128 112 140 118" stroke="#00d9c0" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+    <!-- Eyes -->
+    <circle cx="88" cy="56" r="5" fill="#1a1a2e"/>
+    <circle cx="104" cy="56" r="5" fill="#1a1a2e"/>
+  </g>
+</svg>
