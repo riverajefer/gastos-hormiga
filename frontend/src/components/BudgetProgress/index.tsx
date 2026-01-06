@@ -14,6 +14,7 @@ import {
   alpha,
 } from '@mui/material';
 import { Settings as SettingsIcon, TrendingUp as TrendingUpIcon } from '@mui/icons-material';
+import { Tooltip, CircularProgress } from '@mui/material';
 import { formatCOP, formatInputCurrency, parseCurrency } from '../../utils/formatCurrency';
 import { budgetColors } from '../../theme/theme';
 
@@ -85,21 +86,24 @@ export function BudgetProgress({ spent, limit, onSetLimit }: BudgetProgressProps
               {limit ? formatCOP(limit) : '---'}
             </Typography>
           </Box>
-          <IconButton 
-            size="small" 
-            onClick={() => {
-              setNewLimit(limit ? formatInputCurrency(limit.toString()) : '');
-              setDialogOpen(true);
-            }}
-            sx={{
-              bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
-              '&:hover': {
-                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2),
-              },
-            }}
-          >
-            <SettingsIcon fontSize="small" />
-          </IconButton>
+          <Tooltip title="Configurar límite mensual">
+            <IconButton
+              size="small"
+              aria-label="Configurar límite mensual"
+              onClick={() => {
+                setNewLimit(limit ? formatInputCurrency(limit.toString()) : '');
+                setDialogOpen(true);
+              }}
+              sx={{
+                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
+                '&:hover': {
+                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2),
+                },
+              }}
+            >
+              <SettingsIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
         </Box>
         
         {limit && (
@@ -154,9 +158,9 @@ export function BudgetProgress({ spent, limit, onSetLimit }: BudgetProgressProps
         )}
       </Box>
 
-      <Dialog 
-        open={dialogOpen} 
-        onClose={() => setDialogOpen(false)}
+      <Dialog
+        open={dialogOpen}
+        onClose={() => !loading && setDialogOpen(false)}
         PaperProps={{
           sx: { borderRadius: 3, minWidth: 320 },
         }}
@@ -172,6 +176,15 @@ export function BudgetProgress({ spent, limit, onSetLimit }: BudgetProgressProps
             label="Límite mensual"
             value={newLimit}
             onChange={(e) => setNewLimit(formatInputCurrency(e.target.value))}
+            disabled={loading}
+            error={parseCurrency(newLimit) <= 0 && newLimit !== ''}
+            helperText={
+              parseCurrency(newLimit) <= 0 && newLimit !== ''
+                ? 'El límite debe ser mayor a 0'
+                : spent > 0 && parseCurrency(newLimit) > 0 && parseCurrency(newLimit) < spent
+                ? `Ya gastaste ${formatCOP(spent)}, considera un límite mayor`
+                : ''
+            }
             InputProps={{
               startAdornment: <InputAdornment position="start">$</InputAdornment>,
             }}
@@ -181,15 +194,16 @@ export function BudgetProgress({ spent, limit, onSetLimit }: BudgetProgressProps
           />
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setDialogOpen(false)} color="inherit">
+          <Button onClick={() => setDialogOpen(false)} color="inherit" disabled={loading}>
             Cancelar
           </Button>
-          <Button 
-            onClick={handleSave} 
+          <Button
+            onClick={handleSave}
             variant="contained"
-            disabled={loading || !newLimit}
+            disabled={loading || !newLimit || parseCurrency(newLimit) <= 0}
+            startIcon={loading ? <CircularProgress size={16} color="inherit" /> : null}
           >
-            Guardar
+            {loading ? 'Guardando...' : 'Guardar'}
           </Button>
         </DialogActions>
       </Dialog>

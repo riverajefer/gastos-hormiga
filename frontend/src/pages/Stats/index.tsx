@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Typography, Card, Tab, Tabs, alpha, Skeleton } from '@mui/material';
+import { Box, Typography, Card, Tab, Tabs, alpha, Skeleton, useMediaQuery, useTheme } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import { ShameMode } from '../../components/ShameMode';
 import { useStatsStore } from '../../store/useStatsStore';
@@ -22,6 +22,10 @@ const getCategoryInfo = (id: string) => {
 
 export function StatsPage() {
   const [tab, setTab] = useState(0);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const chartHeight = isMobile ? 220 : 200;
+
   const { selectedYear, selectedMonth } = useExpenseStore();
   const { monthlyStats, yearlyStats, weekdayStats, loading, fetchMonthlyStats, fetchYearlyStats, fetchWeekdayStats } = useStatsStore();
 
@@ -64,45 +68,60 @@ export function StatsPage() {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             <Card sx={{ p: 3 }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>Por categoría</Typography>
-              {loading ? <Skeleton variant="rounded" height={200} /> : categoryData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={200}>
+              {loading ? <Skeleton variant="rounded" height={chartHeight} /> : categoryData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={chartHeight}>
                   <PieChart>
-                    <Pie data={categoryData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={2}>
+                    <Pie data={categoryData} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={isMobile ? 40 : 50} outerRadius={isMobile ? 65 : 80} paddingAngle={2}>
                       {categoryData.map((entry, index) => (<Cell key={index} fill={entry.color} />))}
                     </Pie>
                     <Tooltip formatter={(value: number) => formatCOP(value)} contentStyle={{ background: '#1c1c28', border: 'none', borderRadius: 8 }} />
                     <Legend formatter={(value, entry: any) => `${entry.payload.emoji} ${value}`} />
                   </PieChart>
                 </ResponsiveContainer>
-              ) : <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center', py: 4 }}>Sin datos este mes</Typography>}
+              ) : (
+                <Box sx={{ textAlign: 'center', py: 4 }}>
+                  <Typography sx={{ fontSize: '2rem', mb: 1 }}>📊</Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>Sin gastos registrados este mes</Typography>
+                </Box>
+              )}
             </Card>
 
             <Card sx={{ p: 3 }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>Por día de la semana</Typography>
-              {loading ? <Skeleton variant="rounded" height={200} /> : weekdayData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={200}>
+              {loading ? <Skeleton variant="rounded" height={chartHeight} /> : weekdayData.some(d => d.total > 0) ? (
+                <ResponsiveContainer width="100%" height={chartHeight}>
                   <BarChart data={weekdayData}>
-                    <XAxis dataKey="name" tick={{ fill: '#888', fontSize: 12 }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fill: '#888', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} />
+                    <XAxis dataKey="name" tick={{ fill: '#888', fontSize: isMobile ? 10 : 12 }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fill: '#888', fontSize: isMobile ? 10 : 12 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} width={isMobile ? 35 : 45} />
                     <Tooltip formatter={(value: number) => formatCOP(value)} contentStyle={{ background: '#1c1c28', border: 'none', borderRadius: 8 }} />
                     <Bar dataKey="total" fill="#00d9c0" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
-              ) : <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center', py: 4 }}>Sin datos este mes</Typography>}
+              ) : (
+                <Box sx={{ textAlign: 'center', py: 4 }}>
+                  <Typography sx={{ fontSize: '2rem', mb: 1 }}>📅</Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>Sin datos para mostrar este mes</Typography>
+                </Box>
+              )}
             </Card>
 
             <Card sx={{ p: 3 }}>
               <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>Tendencia {selectedYear}</Typography>
-              {loading ? <Skeleton variant="rounded" height={200} /> : monthlyData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={200}>
+              {loading ? <Skeleton variant="rounded" height={chartHeight} /> : monthlyData.some(d => d.total > 0) ? (
+                <ResponsiveContainer width="100%" height={chartHeight}>
                   <BarChart data={monthlyData}>
-                    <XAxis dataKey="name" tick={{ fill: '#888', fontSize: 12 }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fill: '#888', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} />
+                    <XAxis dataKey="name" tick={{ fill: '#888', fontSize: isMobile ? 10 : 12 }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fill: '#888', fontSize: isMobile ? 10 : 12 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${(v/1000).toFixed(0)}k`} width={isMobile ? 35 : 45} />
                     <Tooltip formatter={(value: number) => formatCOP(value)} contentStyle={{ background: '#1c1c28', border: 'none', borderRadius: 8 }} />
                     <Bar dataKey="total" fill="#ff6b6b" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
-              ) : <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center', py: 4 }}>Sin datos este año</Typography>}
+              ) : (
+                <Box sx={{ textAlign: 'center', py: 4 }}>
+                  <Typography sx={{ fontSize: '2rem', mb: 1 }}>📈</Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>Sin datos para mostrar este año</Typography>
+                </Box>
+              )}
             </Card>
           </Box>
         )}

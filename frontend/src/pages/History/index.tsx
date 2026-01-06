@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Box, Typography, TextField, InputAdornment, FormControl, InputLabel, Select, MenuItem, Card, alpha, Snackbar, Alert } from '@mui/material';
-import { Search as SearchIcon } from '@mui/icons-material';
+import { Box, Typography, TextField, InputAdornment, FormControl, InputLabel, Select, MenuItem, Card, alpha, Snackbar, Alert, Button } from '@mui/material';
+import { Search as SearchIcon, FilterAltOff as ClearFilterIcon } from '@mui/icons-material';
 import { MonthSelector } from '../../components/MonthSelector';
 import { ExpenseList } from '../../components/ExpenseList';
 import { StatsCard } from '../../components/StatsCard';
@@ -33,6 +33,14 @@ export function HistoryPage() {
   };
 
   const filteredExpenses = categoryFilter ? expenses.filter(e => e.category === categoryFilter) : expenses;
+  const hasActiveFilters = search.trim() !== '' || categoryFilter !== '';
+  const noResults = hasActiveFilters && filteredExpenses.length === 0;
+
+  const clearFilters = () => {
+    setSearch('');
+    setSearchQuery('');
+    setCategoryFilter('');
+  };
 
   const getComparisonText = () => {
     if (!comparisonStats) return '';
@@ -73,8 +81,40 @@ export function HistoryPage() {
           <StatsCard title="Mes anterior" value={comparisonStats?.previous.total || 0} subtitle={`${comparisonStats?.previous.count || 0} gastos`} color="text.secondary" />
         </Box>
 
-        <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>Todos los gastos</Typography>
-        <ExpenseList expenses={filteredExpenses} loading={loading} onDelete={async (id) => { await deleteExpense(id); setSnackbar({ open: true, message: '🗑️ Gasto eliminado', severity: 'success' }); }} onUpdate={async (id, data) => { await updateExpense(id, data); setSnackbar({ open: true, message: '✏️ Gasto actualizado', severity: 'success' }); }} />
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            {hasActiveFilters ? `${filteredExpenses.length} resultado${filteredExpenses.length !== 1 ? 's' : ''}` : 'Todos los gastos'}
+          </Typography>
+          {hasActiveFilters && (
+            <Button size="small" startIcon={<ClearFilterIcon />} onClick={clearFilters} color="inherit">
+              Limpiar
+            </Button>
+          )}
+        </Box>
+
+        {noResults ? (
+          <Box sx={{ textAlign: 'center', py: 6, color: 'text.secondary' }}>
+            <Typography variant="h1" sx={{ fontSize: '3rem', mb: 2 }}>🔍</Typography>
+            <Typography variant="h6" sx={{ fontWeight: 500, mb: 1 }}>Sin resultados</Typography>
+            <Typography variant="body2" sx={{ mb: 2 }}>
+              No encontramos gastos {search && `con "${search}"`} {categoryFilter && `en esta categoría`}
+            </Typography>
+            <Button variant="outlined" size="small" onClick={clearFilters}>Limpiar filtros</Button>
+          </Box>
+        ) : (
+          <ExpenseList
+            expenses={filteredExpenses}
+            loading={loading}
+            onDelete={async (id) => {
+              await deleteExpense(id);
+              setSnackbar({ open: true, message: 'Gasto eliminado correctamente', severity: 'success' });
+            }}
+            onUpdate={async (id, data) => {
+              await updateExpense(id, data);
+              setSnackbar({ open: true, message: 'Gasto actualizado correctamente', severity: 'success' });
+            }}
+          />
+        )}
       </Box>
 
       <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={() => setSnackbar({ ...snackbar, open: false })} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>

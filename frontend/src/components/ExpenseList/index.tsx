@@ -6,6 +6,7 @@ import {
   IconButton,
   Skeleton,
   alpha,
+  Tooltip,
 } from '@mui/material';
 import {
   Edit as EditIcon,
@@ -33,7 +34,7 @@ interface GroupedExpenses {
 }
 
 export function ExpenseList({ expenses, loading, onDelete, onUpdate }: ExpenseListProps) {
-  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleteExpense, setDeleteExpense] = useState<Expense | null>(null);
   const [editExpense, setEditExpense] = useState<Expense | null>(null);
   const [swipedId, setSwipedId] = useState<string | null>(null);
 
@@ -56,9 +57,9 @@ export function ExpenseList({ expenses, loading, onDelete, onUpdate }: ExpenseLi
   }, [expenses]);
 
   const handleDelete = async () => {
-    if (deleteId) {
-      await onDelete(deleteId);
-      setDeleteId(null);
+    if (deleteExpense) {
+      await onDelete(deleteExpense.id);
+      setDeleteExpense(null);
     }
   };
 
@@ -209,40 +210,46 @@ export function ExpenseList({ expenses, loading, onDelete, onUpdate }: ExpenseLi
                         pl: 4,
                       }}
                     >
-                      <IconButton
-                        size="small"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setEditExpense(expense);
-                          setSwipedId(null);
-                        }}
-                        sx={{
-                          bgcolor: (theme) => alpha(theme.palette.info.main, 0.1),
-                          color: 'info.main',
-                          '&:hover': {
-                            bgcolor: (theme) => alpha(theme.palette.info.main, 0.2),
-                          },
-                        }}
-                      >
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setDeleteId(expense.id);
-                          setSwipedId(null);
-                        }}
-                        sx={{
-                          bgcolor: (theme) => alpha(theme.palette.error.main, 0.1),
-                          color: 'error.main',
-                          '&:hover': {
-                            bgcolor: (theme) => alpha(theme.palette.error.main, 0.2),
-                          },
-                        }}
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
+                      <Tooltip title="Editar">
+                        <IconButton
+                          size="small"
+                          aria-label={`Editar ${expense.concept}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditExpense(expense);
+                            setSwipedId(null);
+                          }}
+                          sx={{
+                            bgcolor: (theme) => alpha(theme.palette.info.main, 0.1),
+                            color: 'info.main',
+                            '&:hover': {
+                              bgcolor: (theme) => alpha(theme.palette.info.main, 0.2),
+                            },
+                          }}
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Eliminar">
+                        <IconButton
+                          size="small"
+                          aria-label={`Eliminar ${expense.concept}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDeleteExpense(expense);
+                            setSwipedId(null);
+                          }}
+                          sx={{
+                            bgcolor: (theme) => alpha(theme.palette.error.main, 0.1),
+                            color: 'error.main',
+                            '&:hover': {
+                              bgcolor: (theme) => alpha(theme.palette.error.main, 0.2),
+                            },
+                          }}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
                     </Box>
                   )}
                 </Card>
@@ -253,12 +260,12 @@ export function ExpenseList({ expenses, loading, onDelete, onUpdate }: ExpenseLi
       </Box>
 
       <ConfirmDialog
-        open={!!deleteId}
+        open={!!deleteExpense}
         title="Eliminar gasto"
-        message="¿Estás seguro de que quieres eliminar este gasto? Esta acción no se puede deshacer."
+        message={deleteExpense ? `¿Eliminar "${deleteExpense.concept}" (${formatCOP(deleteExpense.amount)})? Esta acción no se puede deshacer.` : ''}
         confirmText="Eliminar"
         onConfirm={handleDelete}
-        onCancel={() => setDeleteId(null)}
+        onCancel={() => setDeleteExpense(null)}
       />
 
       {editExpense && (
