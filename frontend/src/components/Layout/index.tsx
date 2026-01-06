@@ -58,16 +58,19 @@ export function Layout() {
       setFormOpen(false);
       setSnackbar({
         open: true,
-        message: '✅ Gasto registrado',
+        message: `"${data.concept}" registrado correctamente`,
         severity: 'success',
       });
       // Refresh data
       fetchExpenses();
       fetchMonthlyStats(selectedYear, selectedMonth);
-    } catch {
+    } catch (error) {
+      const errorMessage = error instanceof Error && error.message.includes('network')
+        ? 'Sin conexión. Verifica tu internet e intenta de nuevo.'
+        : 'No se pudo guardar el gasto. Intenta de nuevo.';
       setSnackbar({
         open: true,
-        message: '❌ Error al guardar',
+        message: errorMessage,
         severity: 'error',
       });
     }
@@ -135,7 +138,7 @@ export function Layout() {
       >
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           Nuevo gasto 🐜
-          <IconButton onClick={() => setFormOpen(false)} size="small">
+          <IconButton onClick={() => setFormOpen(false)} size="small" aria-label="Cerrar formulario">
             <CloseIcon />
           </IconButton>
         </DialogTitle>

@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography, alpha } from '@mui/material';
+import { Box, IconButton, Typography, alpha, Tooltip } from '@mui/material';
 import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
@@ -51,18 +51,21 @@ export function MonthSelector({ month, year, onChange, disableFuture = true }: M
         gap: 1,
       }}
     >
-      <IconButton 
-        onClick={handlePrevious}
-        size="small"
-        sx={{
-          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
-          '&:hover': {
-            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2),
-          },
-        }}
-      >
-        <ChevronLeftIcon />
-      </IconButton>
+      <Tooltip title="Mes anterior">
+        <IconButton
+          onClick={handlePrevious}
+          size="small"
+          aria-label="Mes anterior"
+          sx={{
+            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
+            '&:hover': {
+              bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2),
+            },
+          }}
+        >
+          <ChevronLeftIcon />
+        </IconButton>
+      </Tooltip>
       
       <Box
         onClick={handleReset}
@@ -95,22 +98,27 @@ export function MonthSelector({ month, year, onChange, disableFuture = true }: M
         )}
       </Box>
       
-      <IconButton 
-        onClick={handleNext}
-        size="small"
-        disabled={!canGoForward}
-        sx={{
-          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
-          '&:hover': {
-            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2),
-          },
-          '&.Mui-disabled': {
-            opacity: 0.3,
-          },
-        }}
-      >
-        <ChevronRightIcon />
-      </IconButton>
+      <Tooltip title={canGoForward ? 'Mes siguiente' : 'No puedes ir al futuro'}>
+        <span>
+          <IconButton
+            onClick={handleNext}
+            size="small"
+            disabled={!canGoForward}
+            aria-label="Mes siguiente"
+            sx={{
+              bgcolor: (theme) => alpha(theme.palette.primary.main, 0.1),
+              '&:hover': {
+                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.2),
+              },
+              '&.Mui-disabled': {
+                opacity: 0.3,
+              },
+            }}
+          >
+            <ChevronRightIcon />
+          </IconButton>
+        </span>
+      </Tooltip>
     </Box>
   );
 }

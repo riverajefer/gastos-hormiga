@@ -5,13 +5,13 @@ import {
   Button,
   InputAdornment,
   Autocomplete,
-  IconButton,
   Collapse,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
   alpha,
+  Typography,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -160,40 +160,51 @@ export function ExpenseForm({
         }}
       />
       
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <IconButton
-          size="small"
-          onClick={() => setShowAdvanced(!showAdvanced)}
-          sx={{ 
-            transform: showAdvanced ? 'rotate(180deg)' : 'none',
-            transition: 'transform 0.2s',
-          }}
-        >
-          <ExpandMoreIcon />
-        </IconButton>
-        <Box 
-          component="span" 
-          onClick={() => setShowAdvanced(!showAdvanced)}
-          sx={{ 
-            fontSize: '0.875rem', 
-            color: 'text.secondary',
-            cursor: 'pointer',
-            userSelect: 'none',
-          }}
-        >
-          {showAdvanced ? 'Menos opciones' : 'Más opciones'}
-        </Box>
-      </Box>
+      <Button
+        variant="text"
+        size="small"
+        onClick={() => setShowAdvanced(!showAdvanced)}
+        startIcon={
+          <ExpandMoreIcon
+            sx={{
+              transform: showAdvanced ? 'rotate(180deg)' : 'none',
+              transition: 'transform 0.3s ease',
+            }}
+          />
+        }
+        sx={{
+          alignSelf: 'flex-start',
+          color: 'text.secondary',
+          textTransform: 'none',
+          '&:hover': {
+            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+            color: 'primary.main',
+          },
+        }}
+        aria-expanded={showAdvanced}
+        aria-controls="advanced-options"
+      >
+        {showAdvanced ? 'Menos opciones' : 'Más opciones'}
+        {!showAdvanced && (
+          <Typography
+            component="span"
+            variant="caption"
+            sx={{ ml: 0.5, color: 'text.disabled' }}
+          >
+            (fecha, categoría)
+          </Typography>
+        )}
+      </Button>
       
-      <Collapse in={showAdvanced}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Collapse in={showAdvanced} id="advanced-options">
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
           <TextField
             type="date"
             label="Fecha"
             value={date}
             onChange={handleDateChange}
             error={!!dateError}
-            helperText={dateError}
+            helperText={dateError || 'Cambia la fecha si el gasto fue otro día'}
             fullWidth
             InputProps={{
               startAdornment: (
@@ -204,7 +215,7 @@ export function ExpenseForm({
             }}
             InputLabelProps={{ shrink: true }}
           />
-          
+
           <FormControl fullWidth>
             <InputLabel>Categoría (opcional)</InputLabel>
             <Select
@@ -213,7 +224,7 @@ export function ExpenseForm({
               onChange={(e) => setCategory(e.target.value)}
             >
               <MenuItem value="">
-                <em>Automática</em>
+                <em>Automática (según el concepto)</em>
               </MenuItem>
               {categories.map((cat) => (
                 <MenuItem key={cat.id} value={cat.id}>
