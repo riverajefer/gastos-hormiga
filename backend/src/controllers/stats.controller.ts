@@ -4,10 +4,10 @@ import * as statsService from '../services/stats.service.js';
 export async function getMonthlyStats(req: Request, res: Response, next: NextFunction) {
   try {
     const { year, month } = req.params;
-    
+
     const stats = await statsService.getMonthlyStats(
-      parseInt(year),
-      parseInt(month)
+      parseInt(year as string),
+      parseInt(month as string)
     );
     
     res.json(stats);
@@ -19,8 +19,8 @@ export async function getMonthlyStats(req: Request, res: Response, next: NextFun
 export async function getYearlyStats(req: Request, res: Response, next: NextFunction) {
   try {
     const { year } = req.params;
-    
-    const stats = await statsService.getYearlyStats(parseInt(year));
+
+    const stats = await statsService.getYearlyStats(parseInt(year as string));
     res.json(stats);
   } catch (error) {
     next(error);
@@ -91,10 +91,10 @@ export async function setBudget(req: Request, res: Response, next: NextFunction)
 export async function getBudget(req: Request, res: Response, next: NextFunction) {
   try {
     const { year, month } = req.params;
-    
+
     const budget = await statsService.getBudget(
-      parseInt(year),
-      parseInt(month)
+      parseInt(year as string),
+      parseInt(month as string)
     );
     
     res.json(budget);
