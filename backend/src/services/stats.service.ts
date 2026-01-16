@@ -56,13 +56,13 @@ export async function getMonthlyStats(year: number, month: number): Promise<Mont
   });
 
   // Calculate totals
-  const totalSpent = expenses.reduce((sum, e) => sum + e.amount, 0);
+  const totalSpent = expenses.reduce((sum: number, e: any) => sum + e.amount, 0);
   const expenseCount = expenses.length;
   const dailyAverage = currentDay > 0 ? Math.round(totalSpent / currentDay) : 0;
 
   // Group by day
   const byDayMap = new Map<string, { total: number; count: number }>();
-  expenses.forEach(e => {
+  expenses.forEach((e: any) => {
     const dateStr = e.date.toISOString().split('T')[0];
     const existing = byDayMap.get(dateStr) || { total: 0, count: 0 };
     byDayMap.set(dateStr, {
@@ -85,7 +85,7 @@ export async function getMonthlyStats(year: number, month: number): Promise<Mont
 
   // Group by category
   const byCategoryMap = new Map<string, { total: number; count: number }>();
-  expenses.forEach(e => {
+  expenses.forEach((e: any) => {
     const existing = byCategoryMap.get(e.category) || { total: 0, count: 0 };
     byCategoryMap.set(e.category, {
       total: existing.total + e.amount,
@@ -99,7 +99,7 @@ export async function getMonthlyStats(year: number, month: number): Promise<Mont
 
   // Top concepts
   const byConceptMap = new Map<string, { count: number; total: number }>();
-  expenses.forEach(e => {
+  expenses.forEach((e: any) => {
     const concept = e.concept.toLowerCase();
     const existing = byConceptMap.get(concept) || { count: 0, total: 0 };
     byConceptMap.set(concept, {
@@ -154,8 +154,8 @@ export async function getYearlyStats(year: number): Promise<YearlyStats> {
     },
   });
 
-  const totalSpent = expenses.reduce((sum, e) => sum + e.amount, 0);
-  
+  const totalSpent = expenses.reduce((sum: number, e: any) => sum + e.amount, 0);
+
   // Determine how many months have passed
   const today = new Date();
   const monthsPassed = today.getFullYear() === year
@@ -166,7 +166,7 @@ export async function getYearlyStats(year: number): Promise<YearlyStats> {
 
   // Group by month
   const byMonthMap = new Map<number, { total: number; count: number }>();
-  expenses.forEach(e => {
+  expenses.forEach((e: any) => {
     const month = e.date.getMonth() + 1;
     const existing = byMonthMap.get(month) || { total: 0, count: 0 };
     byMonthMap.set(month, {
@@ -181,7 +181,7 @@ export async function getYearlyStats(year: number): Promise<YearlyStats> {
 
   // Group by category with yearly projections
   const byCategoryMap = new Map<string, number>();
-  expenses.forEach(e => {
+  expenses.forEach((e: any) => {
     byCategoryMap.set(e.category, (byCategoryMap.get(e.category) || 0) + e.amount);
   });
 
@@ -195,7 +195,7 @@ export async function getYearlyStats(year: number): Promise<YearlyStats> {
 
   // Calculate projections for shame mode
   const byConceptMap = new Map<string, number>();
-  expenses.forEach(e => {
+  expenses.forEach((e: any) => {
     const concept = e.concept.toLowerCase();
     byConceptMap.set(concept, (byConceptMap.get(concept) || 0) + e.amount);
   });
@@ -263,8 +263,8 @@ export async function getComparisonStats(
     }),
   ]);
 
-  const currentTotal = currentExpenses.reduce((sum, e) => sum + e.amount, 0);
-  const previousTotal = previousExpenses.reduce((sum, e) => sum + e.amount, 0);
+  const currentTotal = currentExpenses.reduce((sum: number, e: any) => sum + e.amount, 0);
+  const previousTotal = previousExpenses.reduce((sum: number, e: any) => sum + e.amount, 0);
   const difference = currentTotal - previousTotal;
   const percentageChange = previousTotal > 0
     ? Math.round((difference / previousTotal) * 100)
@@ -307,7 +307,7 @@ export async function getStatsByCategory(year: number, month?: number) {
   });
 
   const byCategory = new Map<string, { total: number; count: number }>();
-  expenses.forEach(e => {
+  expenses.forEach((e: any) => {
     const existing = byCategory.get(e.category) || { total: 0, count: 0 };
     byCategory.set(e.category, {
       total: existing.total + e.amount,
@@ -341,7 +341,7 @@ export async function getStatsByWeekday(year: number, month?: number) {
   const weekdays = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   const byWeekday = new Map<number, { total: number; count: number }>();
 
-  expenses.forEach(e => {
+  expenses.forEach((e: any) => {
     const day = e.date.getDay();
     const existing = byWeekday.get(day) || { total: 0, count: 0 };
     byWeekday.set(day, {

@@ -130,5 +130,5 @@ export async function getConceptSuggestions(query: string) {
     },
   });
   
-  return expenses.map(e => e.concept);
+  return expenses.map((e: { concept: string }) => e.concept);
 }

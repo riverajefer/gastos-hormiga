@@ -24,7 +24,7 @@ export async function getExpenses(req: Request, res: Response, next: NextFunctio
 export async function getExpenseById(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
-    const expense = await expenseService.getExpenseById(id);
+    const expense = await expenseService.getExpenseById(id as string);
     
     if (!expense) {
       res.status(404).json({ error: 'Expense not found' });
@@ -64,8 +64,8 @@ export async function updateExpense(req: Request, res: Response, next: NextFunct
   try {
     const { id } = req.params;
     const { concept, amount, category, date, isRecurring } = req.body;
-    
-    const expense = await expenseService.updateExpense(id, {
+
+    const expense = await expenseService.updateExpense(id as string, {
       concept,
       amount,
       category,
@@ -82,7 +82,7 @@ export async function updateExpense(req: Request, res: Response, next: NextFunct
 export async function deleteExpense(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
-    await expenseService.deleteExpense(id);
+    await expenseService.deleteExpense(id as string);
     res.status(204).send();
   } catch (error) {
     next(error);

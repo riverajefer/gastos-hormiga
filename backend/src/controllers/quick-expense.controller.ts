@@ -35,8 +35,8 @@ export async function updateQuickExpense(req: Request, res: Response, next: Next
   try {
     const { id } = req.params;
     const { concept, amount, category, order } = req.body;
-    
-    const quickExpense = await quickExpenseService.updateQuickExpense(id, {
+
+    const quickExpense = await quickExpenseService.updateQuickExpense(id as string, {
       concept,
       amount,
       category,
@@ -52,7 +52,7 @@ export async function updateQuickExpense(req: Request, res: Response, next: Next
 export async function deleteQuickExpense(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
-    await quickExpenseService.deleteQuickExpense(id);
+    await quickExpenseService.deleteQuickExpense(id as string);
     res.status(204).send();
   } catch (error) {
     next(error);
@@ -78,7 +78,7 @@ export async function reorderQuickExpenses(req: Request, res: Response, next: Ne
 export async function useQuickExpense(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
-    const expense = await quickExpenseService.useQuickExpense(id);
+    const expense = await quickExpenseService.useQuickExpense(id as string);
     res.status(201).json(expense);
   } catch (error) {
     next(error);
